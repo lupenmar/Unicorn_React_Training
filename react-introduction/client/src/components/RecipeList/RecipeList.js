@@ -15,6 +15,7 @@ function RecipeList(props) {
   const [searchBy, setSearchBy] = useState("");
 
   const filteredRecipeList = useMemo(() => {
+    if (!Array.isArray(props.recipeList)) return [];
     return props.recipeList.filter((item) => {
       return (
         (item.name.toLowerCase().includes(searchBy.toLowerCase()) ||
@@ -22,7 +23,7 @@ function RecipeList(props) {
         (selectedCategory === "All" || item.category === selectedCategory)
       );
     });
-  }, [searchBy, selectedCategory]);
+  }, [searchBy, selectedCategory, props.recipeList]);
 
   function handleSearch(event) {
     event.preventDefault();
