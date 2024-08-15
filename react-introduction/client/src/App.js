@@ -1,6 +1,6 @@
 import "./App.css";
 import RecipeSiteInfo from "./components/RecipeSiteInfo/RecipeSiteInfo";
-import RecipeList from "./components/RecipeList";
+import RecipeList from "./components/RecipeList/RecipeList";
 import "@fontsource/montserrat";
 
 const recipeSite = {
@@ -71,6 +71,7 @@ const recipeList = [
         unit: "špetka",
       },
     ],
+    category: "Lunch",
     id: "b6c21cf8807dd356",
   },
   {
@@ -135,6 +136,7 @@ const recipeList = [
         unit: "ml",
       },
     ],
+    category: "Breakfast",
     id: "854f2f3cb8954916",
   },
   {
@@ -200,6 +202,7 @@ const recipeList = [
         unit: "lžíce",
       },
     ],
+    category: "Dinner",
     id: "1ae20af4cfa8efc4",
   },
   {
@@ -270,6 +273,7 @@ const recipeList = [
         unit: "ks",
       },
     ],
+    category: "Lunch",
     id: "2dd281dff25fe765",
   },
   {
@@ -339,6 +343,7 @@ const recipeList = [
         unit: "plátky",
       },
     ],
+    category: "Lunch",
     id: "a771ee4c1359b270",
   },
   {
@@ -398,6 +403,7 @@ const recipeList = [
         unit: "špetka",
       },
     ],
+    category: "Dinner",
     id: "508200e97ac04f80",
   },
   {
@@ -432,6 +438,7 @@ const recipeList = [
         unit: "lžíce",
       },
     ],
+    category: "Lunch",
     id: "2b7dae44b479363a",
   },
   {
@@ -462,6 +469,7 @@ const recipeList = [
         unit: "špetka",
       },
     ],
+    category: "Dinner",
     id: "f00a783bfd2de513",
   },
   {
@@ -506,6 +514,7 @@ const recipeList = [
         unit: "špetka",
       },
     ],
+    category: "Dinner",
     id: "62cee1045b85cdda",
   },
   {
@@ -550,6 +559,7 @@ const recipeList = [
         unit: "lžíce",
       },
     ],
+    category: "Breakfast",
     id: "e6a2450d6d6cd747",
   },
 ];

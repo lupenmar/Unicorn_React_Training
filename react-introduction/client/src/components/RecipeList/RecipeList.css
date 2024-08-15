@@ -1,0 +1,12 @@
+.navbar .container-fluid {
+  justify-content: center;
+}
+
+.navbar .d-flex {
+  align-items: center;
+}
+
+.navbar .searchInput {
+  border-radius: 5px;
+  padding: 5px 8px;
+}
