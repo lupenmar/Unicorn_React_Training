@@ -1,22 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "react-bootstrap/Card";
+import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import Icon from "@mdi/react";
 import "../RecipeCard/RecipeCard.css";
 import { mdiSilverwareForkKnife } from "@mdi/js";
-import RecipeModal from "../RecipeModal/RecipeModal";
 import IngredientsList from "../IngredientList/IngredientList";
 
 function RecipeCard(props) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
   const MAX_DESCRIPTION_LENGTH = 100;
 
   const handleCardClick = () => {
-    setIsExpanded(true);
-  };
-
-  const handleClose = () => {
-    setIsExpanded(false);
+    navigate(`/recipeDetail?id=${props.recipe.id}`);
   };
 
   const ingredientIds = props.recipe.ingredients.map(
@@ -59,11 +55,6 @@ function RecipeCard(props) {
           </Card.Body>
         </Card.Body>
       </Card>
-      <RecipeModal
-        show={isExpanded}
-        onHide={handleClose}
-        recipe={props.recipe}
-      />
     </>
   );
 }

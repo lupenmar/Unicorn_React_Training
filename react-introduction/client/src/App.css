@@ -1,6 +1,8 @@
 .App {
   text-align: center;
   font-family: "Montserrat";
+  padding-top: 60px;
+  margin: 16px;
 }
 
 .loading {

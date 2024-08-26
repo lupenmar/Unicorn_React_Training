@@ -36,9 +36,11 @@ function RecipeList(props) {
 
   return (
     <div>
-      <Navbar bg="light">
-        <div className="container-fluid d-flex">
-          <Navbar.Brand>Seznam receptu</Navbar.Brand>
+      <Navbar collapseOnSelect expand="sm" bg="light">
+        <div className="container-fluid">
+          <Navbar.Brand>Seznam receptů</Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse style={{ justifyContent: "right" }}>
           <CategoryFilter
             selectedCategory={selectedCategory}
             onCategoryChange={(e) => setSelectedCategory(e.target.value)}
@@ -56,13 +58,21 @@ function RecipeList(props) {
               )
             }
           />
+          </Navbar.Collapse>
         </div>
       </Navbar>
-      {isGrid ? (
-        <RecipeGridList recipeList={filteredRecipeList} />
-      ) : (
-        <RecipeTableList recipeList={filteredRecipeList} />
-      )}
+       <div class="container">
+            <div className={"d-block d-md-none"}>
+              <RecipeGridList recipeList={filteredRecipeList} />
+            </div>
+            <div className={"d-none d-md-block"}>
+              {isGrid ? (
+                <RecipeGridList recipeList={filteredRecipeList} />
+              ) : (
+                <RecipeTableList recipeList={filteredRecipeList} />
+              )}
+            </div>
+          </div>
     </div>
   );
 }

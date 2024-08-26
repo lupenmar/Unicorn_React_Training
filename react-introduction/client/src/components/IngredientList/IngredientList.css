@@ -15,11 +15,6 @@
   transition: background-color 0.3s ease;
 }
 
-.ingredients-container {
-  overflow-y: auto;
-  max-height: 200px;
-}
-
 .ingredient-item:hover {
   background-color: #e9ecef;
 }

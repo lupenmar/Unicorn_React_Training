@@ -5,7 +5,7 @@ import { mdiTable, mdiViewGridOutline } from "@mdi/js";
 
 function ViewToggle({ isGrid, onToggleView }) {
   return (
-    <Button variant="outline-primary" onClick={onToggleView}>
+    <Button className={"d-none d-md-block"} variant="outline-primary" onClick={onToggleView}>
       <Icon size={1} path={isGrid ? mdiTable : mdiViewGridOutline} />
       {isGrid ? "Tabulka" : "Grid"}
     </Button>

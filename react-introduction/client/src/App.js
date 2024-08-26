@@ -1,8 +1,12 @@
 import "./App.css";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import RecipeSiteInfo from "./components/RecipeSiteInfo/RecipeSiteInfo";
-import RecipeList from "./components/RecipeList/RecipeList";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import Icon from "@mdi/react";
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import Container from 'react-bootstrap/Container';
 import { mdiLoading } from "@mdi/js";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -11,20 +15,31 @@ function App() {
     state: "pending",
   });
 
-  function getChild() {
+  let navigate = useNavigate();
+
+  function getRecipeListDropdown() {
     switch (recipeListLoadCall.state) {
       case "pending":
         return (
-          <div className="loading">
-            <Icon size={2} path={mdiLoading} spin={true} />
-          </div>
+          <Nav.Link disabled={true}>
+            <Icon size={1} path={mdiLoading} spin={true} /> Seznam receptů
+          </Nav.Link>
         );
       case "success":
         return (
-          <>
-            <RecipeSiteInfo recipeSite={recipeListLoadCall.data} />
-            <RecipeList recipeList={recipeListLoadCall.data} />
-          </>
+          <NavDropdown title="Select recept" id="navbarScrollingDropdown">
+          {recipeListLoadCall.data.map((recipe) => {
+            return (
+              <NavDropdown.Item
+                onClick={() =>
+                  navigate(`/recipeDetail?id=` + recipe.id)
+                }
+              >
+                {recipe.name}
+              </NavDropdown.Item>
+            );
+          })}
+        </NavDropdown>
         );
       case "error":
         return (
@@ -52,7 +67,44 @@ function App() {
     });
   }, []);
 
-  return <div className="App">{getChild()}</div>;
+  return (
+    <div className="App">
+      <Navbar
+        fixed="top"
+        expand={"sm"}
+        className="mb-3"
+        bg="dark"
+        variant="dark"
+      >
+        <Container fluid>
+        <Navbar.Brand onClick={() => navigate("/")}>
+          Chutně a rychle
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`} />
+          <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
+              Chutně a rychle
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className="justify-content-end flex-grow-1 pe-3">
+              {getRecipeListDropdown()}
+                <Nav.Link  onClick={() => navigate("/recipeList")}>
+                  Recepty
+                </Nav.Link>
+                <Nav.Link onClick={() => navigate("/ingridientList")}>
+                 Ingredience
+                </Nav.Link>
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar>
+
+      <Outlet />
+    </div>
+  );
 }
 
 export default App;
