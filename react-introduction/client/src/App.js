@@ -3,11 +3,12 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Icon from "@mdi/react";
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import Container from 'react-bootstrap/Container';
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import Container from "react-bootstrap/Container";
 import { mdiLoading } from "@mdi/js";
+import CreateTask from "./components/CreateTaskModal/createTask";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -15,7 +16,13 @@ function App() {
     state: "pending",
   });
 
+  const [showModal, setShowModal] = useState(false);
+
   let navigate = useNavigate();
+
+  const handleShowModal = () => setShowModal(true);
+
+  const handleCloseModal = () => setShowModal(false);
 
   function getRecipeListDropdown() {
     switch (recipeListLoadCall.state) {
@@ -28,18 +35,16 @@ function App() {
       case "success":
         return (
           <NavDropdown title="Select recept" id="navbarScrollingDropdown">
-          {recipeListLoadCall.data.map((recipe) => {
-            return (
-              <NavDropdown.Item
-                onClick={() =>
-                  navigate(`/recipeDetail?id=` + recipe.id)
-                }
-              >
-                {recipe.name}
-              </NavDropdown.Item>
-            );
-          })}
-        </NavDropdown>
+            {recipeListLoadCall.data.map((recipe) => {
+              return (
+                <NavDropdown.Item
+                  onClick={() => navigate(`/recipeDetail?id=` + recipe.id)}
+                >
+                  {recipe.name}
+                </NavDropdown.Item>
+              );
+            })}
+          </NavDropdown>
         );
       case "error":
         return (
@@ -77,24 +82,26 @@ function App() {
         variant="dark"
       >
         <Container fluid>
-        <Navbar.Brand onClick={() => navigate("/")}>
-          Chutně a rychle
+          <Navbar.Brand onClick={() => navigate("/")}>
+            Chutně a rychle
           </Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-sm`} />
           <Navbar.Offcanvas id={`offcanvasNavbar-expand-sm`}>
             <Offcanvas.Header closeButton>
               <Offcanvas.Title id={`offcanvasNavbarLabel-expand-sm`}>
-              Chutně a rychle
+                Chutně a rychle
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
-              {getRecipeListDropdown()}
-                <Nav.Link  onClick={() => navigate("/recipeList")}>
+                <Nav.Link onClick={handleShowModal}>Vytvořit recept</Nav.Link>
+                <CreateTask show={showModal} handleClose={handleCloseModal} />
+                {getRecipeListDropdown()}
+                <Nav.Link onClick={() => navigate("/recipeList")}>
                   Recepty
                 </Nav.Link>
                 <Nav.Link onClick={() => navigate("/ingridientList")}>
-                 Ingredience
+                  Ingredience
                 </Nav.Link>
               </Nav>
             </Offcanvas.Body>
