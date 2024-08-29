@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import "./CreateTask.css";
 
-function CreateTask({ show, handleClose }) {
+function CreateTask({ show, handleClose, initialRecipe }) {
   const [ingredients, setIngredients] = useState([]);
   const [validated, setValidated] = useState(false);
   const [recipeName, setRecipeName] = useState("");
@@ -21,12 +21,32 @@ function CreateTask({ show, handleClose }) {
     unit: "",
   });
 
+  useEffect(() => {
+    if (initialRecipe) {
+      setRecipeName(initialRecipe.name);
+      setRecipeDescription(initialRecipe.description);
+      setRecipeImgUri(initialRecipe.imgUri);
+      setRecipeCategory(initialRecipe.category);
+      setRecipeIngredients(
+        initialRecipe.ingredients.map((ing) => ({
+          ingredientId: ing.id, 
+          name:
+            ingredients.find((ingredient) => ingredient.id === ing.id)?.name ||
+            "",
+          amount: ing.amount,
+          unit: ing.unit,
+        }))
+      );
+    } else {
+      setRecipeName("");
+      setRecipeDescription("");
+      setRecipeImgUri("");
+      setRecipeCategory("");
+      setRecipeIngredients([]);
+    }
+  }, [initialRecipe, ingredients]);
+
   const handleCloseModal = () => {
-    setRecipeName("");
-    setRecipeDescription("");
-    setRecipeCategory("");
-    setRecipeImgUri("");
-    setRecipeIngredients([]);
     handleClose();
   };
 
@@ -47,7 +67,16 @@ function CreateTask({ show, handleClose }) {
       newIngredient.amount &&
       newIngredient.unit
     ) {
-      setRecipeIngredients([...recipeIngredients, newIngredient]);
+      setRecipeIngredients([
+        ...recipeIngredients,
+        {
+          ingredientId: newIngredient.ingredientId,
+          name: newIngredient.name,
+          amount: newIngredient.amount,
+          unit: newIngredient.unit,
+          id: newIngredient.ingredientId, 
+        },
+      ]);
       setNewIngredient({ ingredientId: "", name: "", amount: "", unit: "" });
       setIsAddingIngredient(false);
     }
@@ -71,7 +100,7 @@ function CreateTask({ show, handleClose }) {
   const submitRecipe = async (recipeData) => {
     const ingredientsWithNumericAmount = recipeData.ingredients.map((ing) => ({
       ...ing,
-      amount: parseInt(ing.amount, 10), 
+      amount: parseInt(ing.amount, 10),
     }));
 
     const dataToSend = {
@@ -80,20 +109,29 @@ function CreateTask({ show, handleClose }) {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/recipe/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const response = await fetch(
+        `http://localhost:8000/recipe/${initialRecipe ? "update" : "create"}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+        }
+      );
       if (!response.ok) {
         throw new Error("Server response was not ok.");
       }
       const responseData = await response.json();
-      console.log("Recipe created:", responseData);
+      console.log(
+        `Recipe ${initialRecipe ? "updated" : "created"}:`,
+        responseData
+      );
     } catch (error) {
-      console.error("Failed to create recipe:", error);
+      console.error(
+        `Failed to ${initialRecipe ? "update" : "create"} recipe:`,
+        error
+      );
     }
   };
 
@@ -101,11 +139,12 @@ function CreateTask({ show, handleClose }) {
     const form = event.currentTarget;
     event.preventDefault();
     const recipe = {
+      id: initialRecipe?.id,
       name: recipeName,
       description: recipeDescription,
       imgUri: recipeImgUri,
       ingredients: recipeIngredients.map((ing) => ({
-        id: ing.ingredientId,
+        id: ing.ingredientId, 
         amount: ing.amount,
         unit: ing.unit,
       })),
@@ -123,7 +162,9 @@ function CreateTask({ show, handleClose }) {
   return (
     <Modal show={show} onHide={handleCloseModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Přidat nový recept</Modal.Title>
+        <Modal.Title>
+          {initialRecipe ? "Upravit recept" : "Přidat nový recept"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -135,6 +176,7 @@ function CreateTask({ show, handleClose }) {
               maxLength={25}
               minLength={2}
               required
+              value={recipeName}
               onChange={(e) => setRecipeName(e.target.value)}
             />
             <Form.Control.Feedback type="invalid">
@@ -150,6 +192,7 @@ function CreateTask({ show, handleClose }) {
               minLength={10}
               required
               placeholder="Popište postup receptu"
+              value={recipeDescription}
               onChange={(e) => setRecipeDescription(e.target.value)}
             />
             <Form.Control.Feedback type="invalid">

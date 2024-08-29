@@ -54,3 +54,31 @@
 .back-button:hover {
   background-color: #0064a7;
 }
+
+.edit-icon {
+  margin-left: 10px;
+}
+
+.edit-button {
+  background-color: #4CAF50; 
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  font-size: 18px; 
+  border-radius: 8px;
+  display: flex; 
+  margin-left: 100px;
+  margin-top: 50px;
+  align-items: center; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: background-color 0.3s, box-shadow 0.3s; 
+}
+
+.edit-button:hover {
+  background-color: #45a049; 
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.edit-button:active {
+  transform: translateY(2px); 
+}

@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Icon from "@mdi/react";
-import { mdiLoading } from "@mdi/js";
+import { mdiLoading, mdiPencilOutline } from "@mdi/js";
 import IngredientList from "../../components/IngredientList/IngredientList";
 import "../RecipeDetail/RecipeDetail.css";
+import CreateTask from "../../components/CreateTaskModal/createTask";
 
 function RecipeDetail() {
   const [recipeDetailLoadCall, setRecipeDetailLoadCall] = useState({
     state: "pending",
   });
-
+  const [showEditModal, setShowEditModal] = useState(false);
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -39,6 +40,14 @@ function RecipeDetail() {
       });
   }, [recipeId]);
 
+  const handleEditClick = () => {
+    setShowEditModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowEditModal(false);
+  };
+
   function getChild() {
     switch (recipeDetailLoadCall.state) {
       case "pending":
@@ -60,6 +69,15 @@ function RecipeDetail() {
               <div className="recipe-detail-image-container">
                 <img src={recipe.imgUri} className="img-fluid" alt="Recipe" />
                 <h1>{recipe.name}</h1>
+                <button onClick={handleEditClick} className="edit-button">
+                  Upravit
+                  <Icon
+                    size={0.8}
+                    path={mdiPencilOutline}
+                    className="edit-icon"
+                    style={{ color: "white", cursor: "pointer" }}
+                  />
+                </button>
               </div>
               <div className="recipe-detail-content">
                 <p>{recipe.description}</p>
@@ -73,6 +91,11 @@ function RecipeDetail() {
                 </div>
               </div>
             </div>
+            <CreateTask
+              show={showEditModal}
+              handleClose={handleCloseModal}
+              initialRecipe={recipe}
+            />
           </>
         );
       case "error":
