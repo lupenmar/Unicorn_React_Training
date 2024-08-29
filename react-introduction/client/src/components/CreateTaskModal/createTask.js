@@ -6,8 +6,10 @@ import "./CreateTask.css";
 
 function CreateTask({ show, handleClose }) {
   const [ingredients, setIngredients] = useState([]);
+  const [validated, setValidated] = useState(false);
   const [recipeName, setRecipeName] = useState("");
   const [recipeDescription, setRecipeDescription] = useState("");
+  const [recipeImgUri, setRecipeImgUri] = useState("");
   const [recipeCategory, setRecipeCategory] = useState("");
   const [recipeIngredients, setRecipeIngredients] = useState([]);
 
@@ -23,6 +25,7 @@ function CreateTask({ show, handleClose }) {
     setRecipeName("");
     setRecipeDescription("");
     setRecipeCategory("");
+    setRecipeImgUri("");
     setRecipeIngredients([]);
     handleClose();
   };
@@ -65,11 +68,42 @@ function CreateTask({ show, handleClose }) {
     setRecipeIngredients(newRecipeIngredients);
   };
 
+  const submitRecipe = async (recipeData) => {
+    const ingredientsWithNumericAmount = recipeData.ingredients.map((ing) => ({
+      ...ing,
+      amount: parseInt(ing.amount, 10), 
+    }));
+
+    const dataToSend = {
+      ...recipeData,
+      ingredients: ingredientsWithNumericAmount,
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/recipe/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      });
+      if (!response.ok) {
+        throw new Error("Server response was not ok.");
+      }
+      const responseData = await response.json();
+      console.log("Recipe created:", responseData);
+    } catch (error) {
+      console.error("Failed to create recipe:", error);
+    }
+  };
+
   const handleSubmit = (event) => {
+    const form = event.currentTarget;
     event.preventDefault();
     const recipe = {
       name: recipeName,
       description: recipeDescription,
+      imgUri: recipeImgUri,
       ingredients: recipeIngredients.map((ing) => ({
         id: ing.ingredientId,
         amount: ing.amount,
@@ -77,7 +111,12 @@ function CreateTask({ show, handleClose }) {
       })),
       category: recipeCategory,
     };
+    if (!form.checkValidity()) {
+      setValidated(true);
+      return;
+    }
     console.log("Celý recept:", recipe);
+    submitRecipe(recipe);
     handleCloseModal();
   };
 
@@ -87,28 +126,41 @@ function CreateTask({ show, handleClose }) {
         <Modal.Title>Přidat nový recept</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={handleSubmit}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formRecipeName">
             <Form.Label>Název receptu</Form.Label>
             <Form.Control
               type="text"
               placeholder="Zadejte název receptu"
+              maxLength={25}
+              minLength={2}
+              required
               onChange={(e) => setRecipeName(e.target.value)}
             />
+            <Form.Control.Feedback type="invalid">
+              Zadejte název s maximální délkou 25 znaků
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formRecipeDescription">
             <Form.Label>Postup receptu</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
+              maxLength={125}
+              minLength={10}
+              required
               placeholder="Popište postup receptu"
               onChange={(e) => setRecipeDescription(e.target.value)}
             />
+            <Form.Control.Feedback type="invalid">
+              Zadejte popis s délkou 10-125 znaků
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formRecipeCategory">
             <Form.Label>Kategorie</Form.Label>
             <Form.Select
               value={recipeCategory}
+              required
               onChange={(e) => setRecipeCategory(e.target.value)}
             >
               <option value="">Vyberte kategorii</option>
@@ -116,8 +168,34 @@ function CreateTask({ show, handleClose }) {
               <option value="Lunch">Oběd</option>
               <option value="Dinner">Večeře</option>
             </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              Vyberte kategorii!
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formRecipeImgUri">
+            <Form.Label>URL obrázku</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Zadejte URL obrázku"
+              value={recipeImgUri}
+              onChange={(e) => setRecipeImgUri(e.target.value)}
+              required
+            />
+            <Form.Control.Feedback type="invalid">
+              Chceme vidět obrázek!
+            </Form.Control.Feedback>
           </Form.Group>
           <h5>Ingredience</h5>
+          <Form.Control
+            type="text"
+            required
+            value={recipeIngredients.length > 0 ? "present" : ""}
+            style={{ display: "none" }}
+            onChange={() => {}}
+          />
+          <Form.Control.Feedback type="invalid">
+            Přidejte alespoň jeden ingredience.
+          </Form.Control.Feedback>
           {recipeIngredients.map((ingredient, index) => (
             <div key={index} className="ingredient-item">
               <span>
@@ -158,7 +236,7 @@ function CreateTask({ show, handleClose }) {
               <Form.Group className="mb-3">
                 <Form.Label>Množství</Form.Label>
                 <Form.Control
-                  type="text"
+                  type="number"
                   value={newIngredient.amount}
                   onChange={(e) =>
                     setNewIngredient({

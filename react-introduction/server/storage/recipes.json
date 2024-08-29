@@ -538,5 +538,24 @@
     ],
     "category": "Breakfast",
     "id": "e6a2450d6d6cd747"
+  },
+  {
+    "name": "Butterbrod",
+    "description": "Super puper butterbrod",
+    "imgUri": "https://t3.ftcdn.net/jpg/00/08/03/64/240_F_8036401_fj0SKBzz7o0slvgb05Ql4VnSZyjoBGdh.jpg",
+    "ingredients": [
+      {
+        "id": "bc6da7a1358c36ca",
+        "amount": 1,
+        "unit": "ks"
+      },
+      {
+        "id": "bf0da9e7fe070b99",
+        "amount": 1,
+        "unit": "ks"
+      }
+    ],
+    "category": "Breakfast",
+    "id": "0be996cde16d8ac6"
   }
 ]
