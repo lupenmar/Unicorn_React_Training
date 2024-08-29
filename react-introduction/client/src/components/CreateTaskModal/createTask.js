@@ -4,7 +4,13 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import "./CreateTask.css";
 
-function CreateTask({ show, handleClose, initialRecipe }) {
+function CreateTask({
+  show,
+  handleClose,
+  initialRecipe,
+  fetchRecipes,
+  onSaveSuccess,
+}) {
   const [ingredients, setIngredients] = useState([]);
   const [validated, setValidated] = useState(false);
   const [recipeName, setRecipeName] = useState("");
@@ -29,7 +35,7 @@ function CreateTask({ show, handleClose, initialRecipe }) {
       setRecipeCategory(initialRecipe.category);
       setRecipeIngredients(
         initialRecipe.ingredients.map((ing) => ({
-          ingredientId: ing.id, 
+          ingredientId: ing.id,
           name:
             ingredients.find((ingredient) => ingredient.id === ing.id)?.name ||
             "",
@@ -74,7 +80,7 @@ function CreateTask({ show, handleClose, initialRecipe }) {
           name: newIngredient.name,
           amount: newIngredient.amount,
           unit: newIngredient.unit,
-          id: newIngredient.ingredientId, 
+          id: newIngredient.ingredientId,
         },
       ]);
       setNewIngredient({ ingredientId: "", name: "", amount: "", unit: "" });
@@ -127,6 +133,8 @@ function CreateTask({ show, handleClose, initialRecipe }) {
         `Recipe ${initialRecipe ? "updated" : "created"}:`,
         responseData
       );
+      fetchRecipes();
+      onSaveSuccess();
     } catch (error) {
       console.error(
         `Failed to ${initialRecipe ? "update" : "create"} recipe:`,
@@ -144,7 +152,7 @@ function CreateTask({ show, handleClose, initialRecipe }) {
       description: recipeDescription,
       imgUri: recipeImgUri,
       ingredients: recipeIngredients.map((ing) => ({
-        id: ing.ingredientId, 
+        id: ing.ingredientId,
         amount: ing.amount,
         unit: ing.unit,
       })),
@@ -290,7 +298,7 @@ function CreateTask({ show, handleClose, initialRecipe }) {
                 />
               </Form.Group>
               <Form.Group className="mb-3">
-                <Form.Label>Jednotka</Form.Label>
+                <Form.Label>Jednotкa</Form.Label>
                 <Form.Control
                   type="text"
                   value={newIngredient.unit}

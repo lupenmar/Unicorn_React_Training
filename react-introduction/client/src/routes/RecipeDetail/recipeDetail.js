@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Icon from "@mdi/react";
 import { mdiLoading, mdiPencilOutline } from "@mdi/js";
@@ -11,6 +11,7 @@ function RecipeDetail() {
     state: "pending",
   });
   const [showEditModal, setShowEditModal] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(Date.now());
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -18,10 +19,9 @@ function RecipeDetail() {
   };
 
   let [searchParams] = useSearchParams();
-
   const recipeId = searchParams.get("id");
 
-  useEffect(() => {
+  const fetchRecipeDetails = useCallback(() => {
     setRecipeDetailLoadCall({
       state: "pending",
     });
@@ -40,12 +40,21 @@ function RecipeDetail() {
       });
   }, [recipeId]);
 
+  useEffect(() => {
+    fetchRecipeDetails();
+  }, [fetchRecipeDetails, lastUpdated]);
+
   const handleEditClick = () => {
     setShowEditModal(true);
   };
 
   const handleCloseModal = () => {
     setShowEditModal(false);
+  };
+
+  const handleSaveSuccess = () => {
+    setLastUpdated(Date.now());
+    handleCloseModal();
   };
 
   function getChild() {
@@ -95,6 +104,8 @@ function RecipeDetail() {
               show={showEditModal}
               handleClose={handleCloseModal}
               initialRecipe={recipe}
+              fetchRecipes={fetchRecipeDetails}
+              onSaveSuccess={handleSaveSuccess}
             />
           </>
         );

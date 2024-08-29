@@ -115,7 +115,7 @@
       },
       {
         "id": "cd99517791018390",
-        "amount": 0.25,
+        "amount": 0,
         "unit": "lžičky"
       },
       {
@@ -559,7 +559,7 @@
     "id": "0be996cde16d8ac6"
   },
   {
-    "name": "Necooooo",
+    "name": "Necoooooo",
     "description": "necoooooooo",
     "imgUri": "https://cdn.awashop.cz/images/0/9ffbac857798aa7b/0/znate-vsechny-ucinky-mrkve.jpg?hash=351548125",
     "ingredients": [
@@ -571,5 +571,61 @@
     ],
     "category": "Dinner",
     "id": "3b93709a0cbc2455"
+  },
+  {
+    "name": "Blaaaa",
+    "description": "blaaaaaawewew",
+    "imgUri": "drw3",
+    "ingredients": [
+      {
+        "id": "01ed1245cdfd005a",
+        "amount": 2,
+        "unit": "ks"
+      }
+    ],
+    "category": "Breakfast",
+    "id": "9677da02cdc98075"
+  },
+  {
+    "name": "nekekfekfnkwefwef",
+    "description": "wefkdoefkwkfpwekf",
+    "imgUri": "efwf",
+    "ingredients": [
+      {
+        "id": "01ed1245cdfd005a",
+        "amount": 2,
+        "unit": "ks"
+      }
+    ],
+    "category": "Breakfast",
+    "id": "8474b9e3b2d2fc59"
+  },
+  {
+    "name": "buuuuuuuuuuuuuuu",
+    "description": "rfjiewjfkijf1",
+    "imgUri": "qe13e",
+    "ingredients": [
+      {
+        "id": "c6ea4fb4d330d32b",
+        "amount": 1,
+        "unit": "ks"
+      }
+    ],
+    "category": "Breakfast",
+    "id": "c0b50a232c3efcd2"
+  },
+  {
+    "name": "pupu",
+    "description": "wenwjenjwndjwndjwndj",
+    "imgUri": "wqdqwdqw",
+    "ingredients": [
+      {
+        "id": "01ed1245cdfd005a",
+        "amount": 2,
+        "unit": "2w2e"
+      }
+    ],
+    "category": "Dinner",
+    "id": "2bbc4ee1e1c5c9cc"
   }
 ]

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import RecipeList from "../components/RecipeList/RecipeList";
 import Icon from "@mdi/react";
@@ -13,7 +13,7 @@ function RecipeListRoute() {
 
   const recipeId = searchParams.get("id");
 
-  useEffect(() => {
+  const fetchRecipeList = useCallback(() => {
     setRecipeListLoadCall({
       state: "pending",
     });
@@ -27,7 +27,11 @@ function RecipeListRoute() {
         setRecipeListLoadCall({ state: "success", data: responseJson });
       }
     });
-  }, [recipeId]);
+  }, []);
+
+  useEffect(() => {
+    fetchRecipeList();
+  }, [fetchRecipeList, recipeId]);
 
   function getChild() {
     switch (recipeListLoadCall.state) {
@@ -40,7 +44,10 @@ function RecipeListRoute() {
       case "success":
         return (
           <>
-            <RecipeList recipeList={recipeListLoadCall.data} />
+            <RecipeList
+              recipeList={recipeListLoadCall.data}
+              fetchRecipeList={fetchRecipeList}
+            />
           </>
         );
       case "error":
