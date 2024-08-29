@@ -5,6 +5,8 @@ import { mdiLoading, mdiPencilOutline } from "@mdi/js";
 import IngredientList from "../../components/IngredientList/IngredientList";
 import "../RecipeDetail/RecipeDetail.css";
 import CreateTask from "../../components/CreateTaskModal/createTask";
+import DeleteTask from "../../components/DeleteTask/DeleteTask";
+import { Alert } from "react-bootstrap";
 
 function RecipeDetail() {
   const [recipeDetailLoadCall, setRecipeDetailLoadCall] = useState({
@@ -13,9 +15,16 @@ function RecipeDetail() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(Date.now());
   const navigate = useNavigate();
+  const [deleteRecipeError, setDeleteRecipeError] = useState("");
 
   const handleBackClick = () => {
     navigate(-1);
+  };
+
+  const handleRecipeDeleted = (recipeId) => {
+    if (recipeDetailLoadCall.state === "success") {
+      navigate("/recipeList");
+    }
   };
 
   let [searchParams] = useSearchParams();
@@ -78,16 +87,32 @@ function RecipeDetail() {
               <div className="recipe-detail-image-container">
                 <img src={recipe.imgUri} className="img-fluid" alt="Recipe" />
                 <h1>{recipe.name}</h1>
-                <button onClick={handleEditClick} className="edit-button">
-                  Upravit
-                  <Icon
-                    size={0.8}
-                    path={mdiPencilOutline}
-                    className="edit-icon"
-                    style={{ color: "white", cursor: "pointer" }}
+                <div className="button-row">
+                  <button onClick={handleEditClick} className="edit-button">
+                    Upravit
+                    <Icon
+                      size={0.8}
+                      path={mdiPencilOutline}
+                      className="edit-icon"
+                      style={{ color: "white", cursor: "pointer" }}
+                    />
+                  </button>
+                  <DeleteTask
+                    recipe={recipe}
+                    onDelete={handleRecipeDeleted}
+                    onError={(error) => setDeleteRecipeError(error)}
                   />
-                </button>
+                </div>
               </div>
+              {deleteRecipeError && (
+                <Alert
+                  variant="danger"
+                  onClose={() => setDeleteRecipeError("")}
+                  dismissible
+                >
+                  {deleteRecipeError}
+                </Alert>
+              )}
               <div className="recipe-detail-content">
                 <p>{recipe.description}</p>
                 <h2>Ingredients:</h2>

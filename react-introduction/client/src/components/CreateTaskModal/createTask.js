@@ -162,7 +162,6 @@ function CreateTask({
       setValidated(true);
       return;
     }
-    console.log("Celý recept:", recipe);
     submitRecipe(recipe);
     handleCloseModal();
   };

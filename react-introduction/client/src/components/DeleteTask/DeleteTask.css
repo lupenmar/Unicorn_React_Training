@@ -1,0 +1,27 @@
+.delete-icon {
+  margin-left: 10px;
+}
+
+.delete-button {
+  background-color: #af4c4c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  display: flex;
+  margin-left: 50px;
+  margin-top: 50px;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #a04545;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.delete-button:active {
+  transform: translateY(2px);
+}
