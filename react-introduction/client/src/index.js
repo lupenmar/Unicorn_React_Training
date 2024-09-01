@@ -4,10 +4,10 @@ import "./index.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import IngredientListRoute from "./routes/IngridientList";
-import RecipeList from "./routes/RecipeList";
-import RecipeDetail from "./routes/RecipeDetail/RecipeDetail";
-import Home from "./routes/Home/Home";
+import IngredientListRoute from "./routes/ingridientList";
+import RecipeList from "./routes/recipeList";
+import RecipeDetail from "./routes/RecipeDetail/recipeDetail";
+import Home from "./routes/Home/home";
 import { UserProvider } from "./UserProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
