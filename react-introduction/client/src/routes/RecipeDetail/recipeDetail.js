@@ -4,11 +4,13 @@ import Icon from "@mdi/react";
 import { mdiLoading, mdiPencilOutline } from "@mdi/js";
 import IngredientList from "../../components/IngredientList/IngredientList";
 import "../RecipeDetail/RecipeDetail.css";
-import CreateTask from "../../components/CreateTaskModal/createTask";
-import DeleteTask from "../../components/DeleteTask/DeleteTask";
+import CreateRecipe from "../../components/CreateRecipeModal/CreateRecipe";
+import DeleteRecipe from "../../components/DeleteRecipe/DeleteRecipe";
 import { Alert } from "react-bootstrap";
+import { useUser, roles } from "../../UserProvider";
 
 function RecipeDetail() {
+  const { currentUser } = useUser();
   const [recipeDetailLoadCall, setRecipeDetailLoadCall] = useState({
     state: "pending",
   });
@@ -87,22 +89,24 @@ function RecipeDetail() {
               <div className="recipe-detail-image-container">
                 <img src={recipe.imgUri} className="img-fluid" alt="Recipe" />
                 <h1>{recipe.name}</h1>
-                <div className="button-row">
-                  <button onClick={handleEditClick} className="edit-button">
-                    Upravit
-                    <Icon
-                      size={0.8}
-                      path={mdiPencilOutline}
-                      className="edit-icon"
-                      style={{ color: "white", cursor: "pointer" }}
+                {currentUser.role === roles.ADMIN && (
+                  <div className="button-row">
+                    <button onClick={handleEditClick} className="edit-button">
+                      Upravit
+                      <Icon
+                        size={0.8}
+                        path={mdiPencilOutline}
+                        className="edit-icon"
+                        style={{ color: "white", cursor: "pointer" }}
+                      />
+                    </button>
+                    <DeleteRecipe
+                      recipe={recipe}
+                      onDelete={handleRecipeDeleted}
+                      onError={(error) => setDeleteRecipeError(error)}
                     />
-                  </button>
-                  <DeleteTask
-                    recipe={recipe}
-                    onDelete={handleRecipeDeleted}
-                    onError={(error) => setDeleteRecipeError(error)}
-                  />
-                </div>
+                  </div>
+                )}
               </div>
               {deleteRecipeError && (
                 <Alert
@@ -125,13 +129,15 @@ function RecipeDetail() {
                 </div>
               </div>
             </div>
-            <CreateTask
-              show={showEditModal}
-              handleClose={handleCloseModal}
-              initialRecipe={recipe}
-              fetchRecipes={fetchRecipeDetails}
-              onSaveSuccess={handleSaveSuccess}
-            />
+            {currentUser.role === roles.ADMIN && (
+              <CreateRecipe
+                show={showEditModal}
+                handleClose={handleCloseModal}
+                initialRecipe={recipe}
+                fetchRecipes={fetchRecipeDetails}
+                onSaveSuccess={handleSaveSuccess}
+              />
+            )}
           </>
         );
       case "error":

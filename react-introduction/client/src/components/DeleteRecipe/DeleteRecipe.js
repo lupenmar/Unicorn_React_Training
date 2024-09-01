@@ -2,9 +2,9 @@ import { useState } from "react";
 import Icon from "@mdi/react";
 import { mdiTrashCanOutline } from "@mdi/js";
 import Confirmation from "../Confirmation/Confirmation";
-import "../DeleteTask/DeleteTask.css";
+import "./DeleteRecipe.css";
 
-export default function DeleteTask({ recipe, onDelete, onError }) {
+export default function DeleteRecipe({ recipe, onDelete, onError }) {
   const [deleteRecipeCall, setDeleteRecipeCall] = useState({
     state: "inactive",
   });

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import "./CreateTask.css";
+import "./CreateRecipe.css";
 
-function CreateTask({
+function CreateRecipe({
   show,
   handleClose,
   initialRecipe,
@@ -324,4 +324,4 @@ function CreateTask({
   );
 }
 
-export default CreateTask;
+export default CreateRecipe;

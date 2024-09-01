@@ -8,7 +8,9 @@ import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Container from "react-bootstrap/Container";
 import { mdiLoading } from "@mdi/js";
-import CreateTask from "./components/CreateTaskModal/createTask";
+import CreateRecipe from "./components/CreateRecipeModal/CreateRecipe";
+import LoginToggle from "./components/LogginToggle/LoginToggle";
+import { useUser, roles } from "./UserProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
 
   const handleCloseModal = () => setShowModal(false);
 
+  const { currentUser } = useUser();
+
   function getRecipeListDropdown() {
     switch (recipeListLoadCall.state) {
       case "pending":
@@ -35,15 +39,14 @@ function App() {
       case "success":
         return (
           <NavDropdown title="Select recept" id="navbarScrollingDropdown">
-            {recipeListLoadCall.data.map((recipe) => {
-              return (
-                <NavDropdown.Item
-                  onClick={() => navigate(`/recipeDetail?id=` + recipe.id)}
-                >
-                  {recipe.name}
-                </NavDropdown.Item>
-              );
-            })}
+            {recipeListLoadCall.data.map((recipe) => (
+              <NavDropdown.Item
+                key={recipe.id}
+                onClick={() => navigate(`/recipeDetail?id=${recipe.id}`)}
+              >
+                {recipe.name}
+              </NavDropdown.Item>
+            ))}
           </NavDropdown>
         );
       case "error":
@@ -59,7 +62,7 @@ function App() {
     }
   }
 
-  useEffect(() => {
+  const fetchRecipes = () => {
     fetch(`http://localhost:8000/recipe/list`, {
       method: "GET",
     }).then(async (response) => {
@@ -70,6 +73,10 @@ function App() {
         setRecipeListLoadCall({ state: "success", data: responseJson });
       }
     });
+  };
+
+  useEffect(() => {
+    fetchRecipes();
   }, []);
 
   return (
@@ -94,15 +101,31 @@ function App() {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link onClick={handleShowModal}>Vytvořit recept</Nav.Link>
-                <CreateTask show={showModal} handleClose={handleCloseModal} />
-                {getRecipeListDropdown()}
-                <Nav.Link onClick={() => navigate("/recipeList")}>
-                  Recepty
-                </Nav.Link>
-                <Nav.Link onClick={() => navigate("/ingridientList")}>
-                  Ingredience
-                </Nav.Link>
+                {currentUser.role === roles.ADMIN && (
+                  <Nav.Link onClick={handleShowModal}>Vytvořit recept</Nav.Link>
+                )}
+                <CreateRecipe
+                  show={showModal}
+                  handleClose={handleCloseModal}
+                  fetchRecipes={fetchRecipes}
+                  onSaveSuccess={handleCloseModal}
+                />
+                {currentUser.role === roles.ADMIN ||
+                currentUser.role === roles.USER ? (
+                  <>
+                    <Nav.Link onClick={() => navigate("/recipeList")}>
+                      Recepty
+                    </Nav.Link>
+                    {getRecipeListDropdown()}
+                  </>
+                ) : null}
+                {currentUser.role === roles.ADMIN ||
+                currentUser.role === roles.USER ? (
+                  <Nav.Link onClick={() => navigate("/ingridientList")}>
+                    Ingredience
+                  </Nav.Link>
+                ) : null}
+                <LoginToggle />
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
